@@ -1,0 +1,7 @@
+=== Metrics Report - 2025-05-26_12-08-37 ===
+
+Function Execution Metrics:
+
+Function Latency Metrics:
+
+Active Instances:

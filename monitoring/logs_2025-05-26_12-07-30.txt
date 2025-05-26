@@ -1,0 +1,52 @@
+=== Logs Report - 2025-05-26_12-07-30 ===
+TIMESTAMP                       SEVERITY  TEXT_PAYLOAD
+2025-05-26T15:07:18.218754646Z  DEBUG     Function execution took 3 ms, finished with status code: 200
+2025-05-26T15:07:18.217777Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:07:18.217749Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:07:18.217715Z               INFO:main:Request method: GET
+2025-05-26T15:07:18.214850923Z  DEBUG     Function execution started
+2025-05-26T15:07:16.946021812Z  DEBUG     Function execution took 3 ms, finished with status code: 200
+2025-05-26T15:07:16.944893Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:07:16.944850Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:07:16.944821Z               INFO:main:Request method: GET
+2025-05-26T15:07:16.942218641Z  DEBUG     Function execution started
+2025-05-26T15:07:15.953559992Z  DEBUG     Function execution took 5 ms, finished with status code: 200
+2025-05-26T15:07:15.952318Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:07:15.952292Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:07:15.952264Z               INFO:main:Request method: GET
+2025-05-26T15:07:15.948414368Z  DEBUG     Function execution started
+2025-05-26T15:05:26.384693243Z  DEBUG     Function execution took 4 ms, finished with status code: 405
+2025-05-26T15:05:26.383138Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:05:26.383132Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:05:26.383114Z               INFO:main:Request method: POST
+2025-05-26T15:05:26.379997976Z  DEBUG     Function execution started
+2025-05-26T15:05:24.169558049Z  DEBUG     Function execution took 4 ms, finished with status code: 200
+2025-05-26T15:05:24.168386Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:05:24.168264Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:05:24.168253Z               INFO:main:Request method: GET
+2025-05-26T15:05:24.164710775Z  DEBUG     Function execution started
+2025-05-26T15:05:22.394359225Z  DEBUG     Function execution took 3 ms, finished with status code: 200
+2025-05-26T15:05:22.393283Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:05:22.393215Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:05:22.393202Z               INFO:main:Request method: GET
+2025-05-26T15:05:22.390382985Z  DEBUG     Function execution started
+2025-05-26T15:05:21.134972721Z  DEBUG     Function execution took 5 ms, finished with status code: 200
+2025-05-26T15:05:21.133666Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:05:21.133556Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:05:21.133543Z               INFO:main:Request method: GET
+2025-05-26T15:05:21.129062155Z  DEBUG     Function execution started
+2025-05-26T15:05:19.866212608Z  DEBUG     Function execution took 4 ms, finished with status code: 200
+2025-05-26T15:05:19.864863Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:05:19.864853Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:05:19.864795Z               INFO:main:Request method: GET
+2025-05-26T15:05:19.861977743Z  DEBUG     Function execution started
+2025-05-26T15:05:18.597294636Z  DEBUG     Function execution took 11 ms, finished with status code: 200
+2025-05-26T15:05:18.595992Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:05:18.595911Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:05:18.595896Z               INFO:main:Request method: GET
+2025-05-26T15:05:18.586281106Z  DEBUG     Function execution started
+2025-05-26T15:05:17.318966010Z  DEBUG     Function execution took 17 ms, finished with status code: 200
+2025-05-26T15:05:17.309733Z               INFO:main:Remote address: 169.254.1.1
+2025-05-26T15:05:17.309730Z               INFO:main:Request path: /helloWorld
+2025-05-26T15:05:17.309717Z               INFO:main:Request method: GET
+2025-05-26T15:05:17.301770061Z  DEBUG     Function execution started

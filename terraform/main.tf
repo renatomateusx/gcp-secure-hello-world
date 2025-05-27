@@ -58,10 +58,10 @@ module "load_balancer" {
 }
 
 # Optional: Create monitoring resources
-# module "monitoring" {
-#   source = "./modules/monitoring"
-#   
-#   project_id       = module.core_infra.project_id
-#   function_name    = module.cloud_function.function_name
-#   load_balancer_name = module.load_balancer.backend_service_name
-# }
+module "monitoring" {
+  source = "./modules/monitoring"
+  
+  project_id       = module.core_infra.project_id
+  function_name    = module.cloud_function.function_name
+  load_balancer_name = module.load_balancer.backend_service_name
+}

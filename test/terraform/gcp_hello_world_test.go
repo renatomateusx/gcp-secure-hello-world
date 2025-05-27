@@ -1,4 +1,3 @@
-
 /**
 
  * Terratest for GCP Hello World Infrastructure
@@ -193,9 +192,9 @@
  
 		 defer resp.Body.Close()
  
-		 // Check status code (should be 405 Method Not Allowed)
+		 // Check status code (should be 403 Forbidden by Security Policy)
  
-		 assert.Equal(t, 405, resp.StatusCode, "Expected status code 405 for POST request to Load Balancer")
+		 assert.Equal(t, 403, resp.StatusCode, "Expected status code 403 for POST request to Load Balancer")
  
 	 })
  

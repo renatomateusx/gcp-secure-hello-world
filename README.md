@@ -65,6 +65,7 @@ export GOOGLE_APPLICATION_CREDENTIALS="path/to/your/service-account-key.json"
 
 ```bash
 # Initialize Terraform
+cd terraform
 terraform init
 
 # Apply the configuration
@@ -150,6 +151,7 @@ For any issues or to customize the tests, edit the scripts in `test/bash/` as ne
 To remove all resources:
 
 ```bash
+cd terraform
 terraform destroy -var-file=environments/dev.tfvars
 ```
 

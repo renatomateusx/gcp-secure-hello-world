@@ -3,7 +3,7 @@
 *.tfstate
 *.tfstate.*
 *.tfvars
-!environments/*.tfvars
+!terraform/environments/*.tfvars
 crash.log
 crash.*.log
 *.tfplan

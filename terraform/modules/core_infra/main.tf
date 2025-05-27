@@ -30,15 +30,15 @@ resource "random_string" "project_suffix" {
 
 resource "google_project" "project" {
 
-  name            = "SMT Take Home Exercise"
+  name                = "SMT Take Home Exercise"
 
-  project_id      = "smt-the-${var.environment}-${var.your_name}-${random_string.project_suffix.result}"
+  project_id          = "smt-the-${var.environment}-${var.your_name}-${random_string.project_suffix.result}"
 
-  billing_account = var.billing_account_id
+  billing_account     = var.billing_account_id
 
-  # Skip delete protection for assessment purposes, but would be recommended for production
+  deletion_policy     = "ABANDON"
 
-  # auto_create_network = false # Uncomment to skip default network creation
+  auto_create_network = true
 
   labels = {
 

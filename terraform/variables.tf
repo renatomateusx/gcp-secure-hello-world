@@ -1,3 +1,13 @@
+/**
+ * Input Variables
+ * 
+ * This file defines all input variables that can be used to customize
+ * the Terraform configuration. Variables can be set via:
+ * - Command line arguments
+ * - Environment variables
+ * - Variable definition files (*.tfvars)
+ */
+
 variable "environment" {
 
   description = "Environment name (dev, tst, prd)"

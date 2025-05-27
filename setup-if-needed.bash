@@ -1,87 +1,70 @@
 #!/bin/bash
 
-# Variáveis
+# Project Configuration
 PROJECT_ID="smt-the-dev-rsantos-i5qi"
-PROJECT_NUMBER="890975952737"
+SERVICE_ACCOUNT="terraform@${PROJECT_ID}.iam.gserviceaccount.com"
 REGION="us-central1"
-FUNCTION_NAME="hello-world-function"
 
-# Cores para output
-RED='\033[0;31m'
+# Output Colors Configuration
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}Iniciando configuração das permissões IAM...${NC}"
+# Helper Functions
+check_gcloud_auth() {
+    if ! gcloud auth list --filter=status:ACTIVE --format="value(account)" | grep -q "@"; then
+        echo -e "${RED}Error: You are not authenticated with Google Cloud.${NC}"
+        echo "Please run: gcloud auth login"
+        exit 1
+    fi
+}
 
-# Verificar se está autenticado
-if ! gcloud auth list --filter=status:ACTIVE --format="value(account)" > /dev/null; then
-    echo -e "${RED}Erro: Você precisa estar autenticado no gcloud${NC}"
-    echo "Execute: gcloud auth login"
+check_project_config() {
+    if ! gcloud config get-value project 2>/dev/null | grep -q "${PROJECT_ID}"; then
+        echo -e "${RED}Error: Wrong project configured.${NC}"
+        echo "Please run: gcloud config set project ${PROJECT_ID}"
+        exit 1
+    fi
+}
+
+# Main Script
+echo "Starting setup script..."
+
+# Check authentication and project configuration
+check_gcloud_auth
+check_project_config
+
+# Configure IAM permissions
+echo "Configuring IAM permissions..."
+gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role="roles/editor"
+
+# Configure URL Map
+echo "Configuring URL Map..."
+gcloud compute url-maps create hello-world-url-map \
+    --default-service=hello-world-backend-service \
+    --project="${PROJECT_ID}"
+
+# Configure additional permissions
+echo "Configuring additional permissions..."
+gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role="roles/cloudfunctions.developer"
+
+gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
+    --member="serviceAccount:${SERVICE_ACCOUNT}" \
+    --role="roles/iam.serviceAccountUser"
+
+# Final verification
+echo "Verifying configuration..."
+if gcloud compute url-maps describe hello-world-url-map --project="${PROJECT_ID}" &>/dev/null; then
+    echo -e "${GREEN}URL Map configuration verified successfully.${NC}"
+else
+    echo -e "${RED}Error: URL Map configuration failed.${NC}"
     exit 1
 fi
 
-# Verificar se o projeto está configurado
-if ! gcloud config get-value project 2>/dev/null | grep -q "$PROJECT_ID"; then
-    echo -e "${YELLOW}Configurando projeto padrão...${NC}"
-    gcloud config set project "$PROJECT_ID"
-fi
-
-# Adicionar permissão para o Compute Engine
-echo -e "${YELLOW}Adicionando permissão para o Compute Engine...${NC}"
-gcloud functions add-iam-policy-binding "$FUNCTION_NAME" \
-    --region="$REGION" \
-    --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
-    --role="roles/cloudfunctions.invoker" \
-    --project="$PROJECT_ID"
-
-# Adicionar permissão para o Serverless Robot
-echo -e "${YELLOW}Adicionando permissão para o Serverless Robot...${NC}"
-gcloud functions add-iam-policy-binding "$FUNCTION_NAME" \
-    --region="$REGION" \
-    --member="serviceAccount:service-${PROJECT_NUMBER}@serverless-robot-prod.iam.gserviceaccount.com" \
-    --role="roles/cloudfunctions.invoker" \
-    --project="$PROJECT_ID"
-
-# Configurar o URL Map
-echo -e "${YELLOW}Configurando o URL Map...${NC}"
-
-# Primeiro, remover o URL Map existente
-echo -e "${YELLOW}Removendo URL Map existente...${NC}"
-gcloud compute url-maps delete hello-world-url-map --global --quiet
-
-# Criar um novo URL Map
-echo -e "${YELLOW}Criando novo URL Map...${NC}"
-gcloud compute url-maps create hello-world-url-map \
-    --default-service=hello-world-backend \
-    --global
-
-# Adicionar path matcher
-echo -e "${YELLOW}Adicionando path matcher...${NC}"
-gcloud compute url-maps add-path-matcher hello-world-url-map \
-    --path-matcher-name=hello-world-matcher \
-    --default-service=hello-world-backend \
-    --path-rules="/helloWorld=hello-world-backend" \
-    --global
-
-# Verificar as permissões configuradas
-echo -e "${YELLOW}Verificando permissões configuradas...${NC}"
-gcloud functions get-iam-policy "$FUNCTION_NAME" \
-    --region="$REGION" \
-    --project="$PROJECT_ID"
-
-gcloud functions add-iam-policy-binding hello-world-function \
-  --region=us-central1 \
-  --member="user:renatomateusx@gmail.com" \
-  --role="roles/cloudfunctions.invoker"
-
-
-gcloud functions add-iam-policy-binding hello-world-function \
-  --region=us-central1 \
-  --member="allUsers" \
-  --role="roles/cloudfunctions.invoker"
-
-
-echo -e "${GREEN}Configuração concluída!${NC}"
-echo -e "${YELLOW}Teste a função com:${NC}"
-echo "curl -v http://34.98.87.137/helloWorld" 
+# Conclusion
+echo -e "${GREEN}Setup completed successfully!${NC}"
+echo "You can now proceed with the deployment." 

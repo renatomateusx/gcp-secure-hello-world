@@ -1,8 +1,8 @@
 environment = "dev"
 
-your_name   = "<seu_nome>"
+your_name   = "rsantos"
 
-billing_account_id = "<seu_billing_id>"
+billing_account_id = "019A84-EB6FF8-7E7A66"
 
 region      = "us-central1"
 

@@ -1,0 +1,27 @@
+# Example variables file for development environment
+# Copy this file to dev.tfvars.local and adjust values as needed
+
+# Required variables
+# -----------------
+# Environment (dev, tst, prd)
+environment = "dev"
+
+# Your name (3-10 characters) - will be used in project ID generation
+your_name   = "your-name"
+
+# GCP Billing Account ID (get it with: gcloud billing accounts list)
+billing_account_id = "XXXXXX-XXXXXX-XXXXXX"
+
+# Optional variables (defaults shown)
+# -----------------
+# GCP Region (default: us-central1)
+region      = "us-central1"
+
+# GCP Zone (default: us-central1-a)
+zone        = "us-central1-a"
+
+# Function source code directory
+function_source_dir = "../function"
+
+# Note: Project ID will be automatically generated in the format:
+# smt-the-{env}-{yourname}-{random4char} 

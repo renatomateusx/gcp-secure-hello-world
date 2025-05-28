@@ -42,6 +42,137 @@ The solution uses the following GCP services:
 - Go >= 1.16 (for running tests)
 - gcloud CLI
 
+## Project Structure and Naming Convention
+
+The project follows a specific naming convention as required in the assessment guide:
+
+1. **Project ID Format:**
+   ```
+   smt-the-{env}-{yourname}-{random4char}
+   ```
+   Where:
+   - `{env}`: Environment (dev, tst, prd)
+   - `{yourname}`: Your name (3-10 characters)
+   - `{random4char}`: Random 4 characters generated during deployment
+
+2. **Project Creation:**
+   - The project is automatically created in the `core_infra` module
+   - The random suffix ensures unique project IDs
+   - The project ID is generated using Terraform's `random_string` resource
+
+3. **Project ID Access:**
+   - The project ID is created in the `core_infra` module
+   - It's exposed as an output variable
+   - Other modules access it through module references
+   - The ID is used to:
+     - Configure the Cloud Function
+     - Set up the Load Balancer
+     - Configure monitoring
+     - Set up security policies
+
+4. **Example Project ID:**
+   ```
+   smt-the-dev-john-abc1
+   ```
+
+## First Time Setup
+
+### 1. Initial GCP Configuration
+
+1. **Set up GCP Project:**
+   ```bash
+   # Login to GCP
+   gcloud auth login
+   
+   # List available billing accounts
+   gcloud billing accounts list
+   ```
+
+2. **Get Billing Account ID:**
+   - Copy the billing account ID from the command output above
+   - Format will be like: `XXXXXX-XXXXXX-XXXXXX`
+
+### 2. Local Environment Setup
+
+1. **Clone the Repository:**
+   ```bash
+   git clone <repository-url>
+   cd gcp-hello-world
+   ```
+
+2. **Configure Environment Variables:**
+   - Copy the example variables file:
+     ```bash
+     cp terraform/environments/dev.tfvars.example terraform/environments/dev.tfvars.local
+     ```
+   - Edit the file `terraform/environments/dev.tfvars.local`:
+     ```hcl
+     # Required variables
+     environment = "dev"        # Choose: dev, tst, or prd
+     your_name   = "your-name"  # 3-10 characters, will be used in project ID
+     billing_account_id = "your-billing-account-id"  # From gcloud billing accounts list
+
+     # Optional variables (defaults shown)
+     region      = "us-central1"
+     zone        = "us-central1-a"
+     function_source_dir = "../function"
+     ```
+
+   > **Note:** The project ID will be automatically generated in the format `smt-the-{env}-{yourname}-{random4char}`. You don't need to set it manually.
+
+   > **Changing Project Name:** If you need to change the project name after creation:
+   > 1. Update the `your_name` variable in your `.tfvars` file
+   > 2. Run `terraform destroy` to remove the old project
+   > 3. Run `terraform apply` to create a new project with the updated name
+   > 
+   > Note: This will create a new project with a new random suffix. The old project will be abandoned (not deleted) as per the assessment requirements.
+
+3. **Configure GCP Authentication:**
+   ```bash
+   # Set up application default credentials
+   gcloud auth application-default login
+   ```
+
+### 3. First Deployment
+
+1. **Initialize Terraform:**
+   ```bash
+   cd terraform
+   terraform init
+   ```
+
+2. **Apply Configuration:**
+   ```bash
+   # Use your local variables file
+   terraform apply -var-file=environments/dev.tfvars.local
+   ```
+
+3. **Check Outputs:**
+   - After deployment, Terraform will show:
+     - Load Balancer URL
+     - Cloud Function URL
+     - Created Project ID
+
+### 4. Initial Testing
+
+1. **Run Basic Test:**
+   ```bash
+   cd ..
+   bash test/bash/test.bash
+   ```
+
+2. **Check Dashboard:**
+   - Access GCP Console
+   - Go to Monitoring > Dashboards
+   - Look for "Hello World Application Dashboard"
+
+### 5. Cleanup (if needed)
+
+```bash
+cd terraform
+terraform destroy -var-file=environments/dev.tfvars.local
+```
+
 ## Implementation
 
 ### 1. Clone the Repository

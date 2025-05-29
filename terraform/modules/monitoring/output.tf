@@ -2,7 +2,7 @@ output "dashboard_name" {
 
   description = "The name of the created monitoring dashboard"
 
-  value       = google_monitoring_dashboard.hello_world_dashboard.display_name
+  value       = google_monitoring_dashboard.hello_world_dashboard.id
 
 }
 

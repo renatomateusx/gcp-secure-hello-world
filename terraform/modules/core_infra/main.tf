@@ -32,11 +32,11 @@ resource "google_project" "project" {
 
   name                = "SMT Take Home Exercise"
 
-  project_id          = "smt-the-${var.environment}-${var.your_name}-${random_string.project_suffix.result}"
+  project_id          = "smt-the-${var.environment}-${var.your_name}-${random_string.project_suffix.result}-2025"
 
   billing_account     = var.billing_account_id
 
-  deletion_policy     = "ABANDON"
+  deletion_policy     = "DELETE"
 
   auto_create_network = true
 

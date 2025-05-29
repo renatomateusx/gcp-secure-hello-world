@@ -12,44 +12,33 @@
 
  */
 
-# Generate random 4 characters for project ID suffix
-
+# Generate a random suffix for the project ID
 resource "random_string" "project_suffix" {
-
   length  = 4
-
   special = false
-
   upper   = false
-
-  numeric = true
-
+  keepers = {
+    # This ensures the random string is only generated once
+    # and remains the same for subsequent applies
+    environment = var.environment
+    your_name   = var.your_name
+  }
 }
 
 # Create the GCP project
-
 resource "google_project" "project" {
-
   name                = "SMT Take Home Exercise"
-
-  project_id          = "smt-the-${var.environment}-${var.your_name}-${random_string.project_suffix.result}-2025"
-
+  project_id          = "smt-the-${var.environment}-${var.your_name}-${random_string.project_suffix.result}"
   billing_account     = var.billing_account_id
-
-  deletion_policy     = "DELETE"
-
   auto_create_network = true
 
   labels = {
-
     environment = var.environment
-
     purpose     = "assessment"
-
     terraform   = "true"
-
   }
 
+  deletion_policy = "DELETE"
 }
 
 # T Enable required APIs

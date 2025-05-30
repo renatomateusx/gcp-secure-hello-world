@@ -24,12 +24,6 @@ variable "environment" {
 
 }
 
-variable "initial_project" {
-    description = "Project name"
-    type = string
-    default = "smt-the-dev-rsantos-i5qi"
-}
-
 variable "your_name" {
 
   description = "Your name to be included in the project ID"
@@ -44,6 +38,12 @@ variable "your_name" {
 
   }
 
+}
+
+variable "initial_project" {
+    description = "Project name"
+    type = string
+    default = "smt-the-dev-rsantos-i5qi"
 }
 
 variable "billing_account_id" {
@@ -85,5 +85,15 @@ variable "function_source_dir" {
   type        = string
 
   default     = "../function"
+
+}
+
+variable "project_alias" {
+
+  description = "The alias for the project"
+
+  type        = string
+
+  default     = "mygcphelloworldproject"
 
 }

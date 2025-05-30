@@ -12,6 +12,13 @@
 
  */
 
+ # Bootstrap provider (no `project` yet)
+provider "google" {
+  alias  = "bootstrap"
+  region = var.region
+  zone   = var.zone
+}
+
 # Generate a random suffix for the project ID
 resource "random_string" "project_suffix" {
   length  = 4
@@ -27,6 +34,7 @@ resource "random_string" "project_suffix" {
 
 # Create the GCP project
 resource "google_project" "project" {
+  provider            = google.bootstrap
   name                = "SMT Take Home Exercise"
   project_id          = "smt-the-${var.environment}-${var.your_name}-${random_string.project_suffix.result}"
   billing_account     = var.billing_account_id

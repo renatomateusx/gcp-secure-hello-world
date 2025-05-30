@@ -2,7 +2,7 @@ environment = "dev"
 
 your_name   = "rsantos"
 
-billing_account_id = "A019A84-EB6FF8-7E7A66A"
+billing_account_id = "019A84-EB6FF8-7E7A66"
 
 region      = "us-central1"
 

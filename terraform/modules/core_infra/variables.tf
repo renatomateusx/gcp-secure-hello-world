@@ -59,3 +59,11 @@ variable "zone" {
   default     = "us-central1-a"
 
 }
+
+variable "project_alias" {
+
+  description = "The alias for the project"
+
+  type        = string
+
+}

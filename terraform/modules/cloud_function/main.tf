@@ -8,6 +8,7 @@
 
 # Create a storage bucket for the function source code
 resource "google_storage_bucket" "function_bucket" {
+  project  = var.project_id
   name     = "${var.project_id}-function-source"
   location = var.region
   uniform_bucket_level_access = true
@@ -37,6 +38,7 @@ resource "google_storage_bucket_object" "function_source" {
 
 # Create the Cloud Function
 resource "google_cloudfunctions_function" "hello_world" {
+  project     = var.project_id
   name        = "hello-world-function"
   description = "A simple Hello World function"
   runtime     = "python39"
@@ -81,6 +83,7 @@ resource "google_cloudfunctions_function" "hello_world" {
 
 # Allow the Load Balancer to invoke the function
 resource "google_cloudfunctions_function_iam_binding" "function_invoker" {
+  project        = var.project_id
   cloud_function = google_cloudfunctions_function.hello_world.name
   role           = "roles/cloudfunctions.invoker"
   members        = [
@@ -92,6 +95,7 @@ resource "google_cloudfunctions_function_iam_binding" "function_invoker" {
 
 # Deny direct access to the function
 resource "google_cloudfunctions_function_iam_binding" "function_deny_all" {
+  project        = var.project_id
   cloud_function = google_cloudfunctions_function.hello_world.name
   role           = "roles/cloudfunctions.invoker"
   members        = []

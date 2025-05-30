@@ -109,7 +109,6 @@ The project follows a specific naming convention as required in the assessment g
      ```hcl
      # Required variables
      environment = "dev"        # Choose: dev, tst, or prd
-     your_name   = "your-name"  # 3-10 characters, will be used in project ID
      billing_account_id = "your-billing-account-id"  # From gcloud billing accounts list
 
      # Optional variables (defaults shown)
@@ -121,9 +120,8 @@ The project follows a specific naming convention as required in the assessment g
    > **Note:** The project ID will be automatically generated in the format `smt-the-{env}-{yourname}-{random4char}`. You don't need to set it manually.
 
    > **Changing Project Name:** If you need to change the project name after creation:
-   > 1. Update the `your_name` variable in your `.tfvars` file
-   > 2. Run `terraform destroy` to remove the old project
-   > 3. Run `terraform apply` to create a new project with the updated name
+   > 1 Run `terraform destroy` to remove the old project
+   > 2. Run `terraform apply` to create a new project with the updated name
    > 
    > Note: This will create a new project with a new random suffix. The old project will be abandoned (not deleted) as per the assessment requirements.
 

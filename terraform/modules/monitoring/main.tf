@@ -20,6 +20,8 @@
 
 resource "google_monitoring_dashboard" "hello_world_dashboard" {
 
+  project = var.project_id
+
   dashboard_json = <<EOF
 
 {
@@ -284,6 +286,8 @@ EOF
 
 resource "google_monitoring_alert_policy" "high_error_rate" {
 
+  project = var.project_id
+
   display_name = "High Error Rate Alert"
 
   combiner     = "OR"
@@ -334,6 +338,7 @@ resource "google_monitoring_alert_policy" "high_error_rate" {
 
 resource "google_monitoring_notification_channel" "email" {
 
+  project      = var.project_id
   display_name = "Email Notification Channel"
 
   type         = "email"
@@ -349,6 +354,8 @@ resource "google_monitoring_notification_channel" "email" {
 # Create a log-based metric for tracking 405 Method Not Allowed responses
 
 resource "google_logging_metric" "method_not_allowed" {
+
+  project     = var.project_id
 
   name        = "method_not_allowed_count"
 

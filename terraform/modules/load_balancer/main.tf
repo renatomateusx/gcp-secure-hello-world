@@ -8,6 +8,7 @@
 
 # Create a Serverless Network Endpoint Group (NEG) for the Cloud Function
 resource "google_compute_region_network_endpoint_group" "function_neg" {
+  project               = var.project_id
   name                  = "hello-world-function-neg"
   network_endpoint_type = "SERVERLESS"
   region                = var.region
@@ -19,6 +20,7 @@ resource "google_compute_region_network_endpoint_group" "function_neg" {
 
 # Create a security policy that allows all requests
 resource "google_compute_security_policy" "function_security_policy" {
+  project               = var.project_id
   name = "hello-world-security-policy"
 
   # Rule that allows all requests
@@ -50,6 +52,7 @@ resource "google_compute_security_policy" "function_security_policy" {
 
 # Create a backend service that uses the Serverless NEG
 resource "google_compute_backend_service" "function_backend" {
+  project     = var.project_id
   name        = "hello-world-backend"
   description = "Backend service for the Hello World function"
   protocol    = "HTTP"
@@ -68,6 +71,7 @@ resource "google_compute_backend_service" "function_backend" {
 
 # Create a URL map to route requests to the backend service
 resource "google_compute_url_map" "function_url_map" {
+  project         = var.project_id
   name            = "hello-world-url-map"
   description     = "URL map for the Hello World function"
   default_service = google_compute_backend_service.function_backend.id
@@ -90,6 +94,7 @@ resource "google_compute_url_map" "function_url_map" {
 
 # Create an HTTP proxy that uses the URL map
 resource "google_compute_target_http_proxy" "function_http_proxy" {
+  project     = var.project_id
   name        = "hello-world-http-proxy"
   description = "HTTP proxy for the Hello World function"
   url_map     = google_compute_url_map.function_url_map.id
@@ -97,6 +102,7 @@ resource "google_compute_target_http_proxy" "function_http_proxy" {
 
 # Create a global forwarding rule to route traffic to the HTTP proxy
 resource "google_compute_global_forwarding_rule" "function_forwarding_rule" {
+  project     = var.project_id
   name        = "hello-world-forwarding-rule"
   description = "Forwarding rule for the Hello World function"
   target      = google_compute_target_http_proxy.function_http_proxy.id

@@ -5,15 +5,9 @@
  * It instantiates all the modules and passes variables between them.
  */
 
+
 # Configure the Google Cloud provider
 provider "google" {
-  project = var.initial_project
-  region  = var.region
-  zone    = var.zone
-}
-
-# Use google-beta provider for features not yet in GA
-provider "google-beta" {
   project = module.core_infra.project_id
   region  = var.region
   zone    = var.zone
@@ -23,8 +17,9 @@ provider "google-beta" {
 module "core_infra" {
   source = "./modules/core_infra"
 
-  environment        = var.environment
+  project_alias      = var.project_alias
   your_name          = var.your_name
+  environment        = var.environment
   billing_account_id = var.billing_account_id
   region             = var.region
   zone               = var.zone
@@ -54,14 +49,16 @@ module "load_balancer" {
   environment   = var.environment
   function_name = module.cloud_function.function_name
 
-  depends_on = [module.cloud_function]
+  depends_on = [module.core_infra, module.cloud_function]
 }
 
 # Optional: Create monitoring resources
 module "monitoring" {
   source = "./modules/monitoring"
   
-  project_id       = module.core_infra.project_id
-  function_name    = module.cloud_function.function_name
-  load_balancer_name = module.load_balancer.backend_service_name
+  project_id           = module.core_infra.project_id
+  function_name        = module.cloud_function.function_name
+  load_balancer_name   = module.load_balancer.backend_service_name
+
+  depends_on = [module.core_infra]
 }

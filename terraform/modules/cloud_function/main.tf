@@ -4,9 +4,17 @@
  * This module creates a Cloud Function that returns "Hello World" for GET requests
  * and rejects other HTTP methods. It includes the storage bucket for the function code,
  * the function itself, and IAM permissions.
+ * 
+ * The module sets up:
+ * - Storage bucket for function code
+ * - Function deployment
+ * - IAM permissions and security
+ * - Auto-scaling configuration
  */
 
-# Create a storage bucket for the function source code
+# Storage Bucket
+# Creates a dedicated bucket for storing function source code
+# Includes versioning and uniform bucket level access for security
 resource "google_storage_bucket" "function_bucket" {
   project  = var.project_id
   name     = "${var.project_id}-function-source"
@@ -22,21 +30,31 @@ resource "google_storage_bucket" "function_bucket" {
   }
 }
 
-# Create a ZIP archive of the function source code
+# Source Code Archive
+# Creates a ZIP file of the function source code
+# Uses MD5 hash in filename for versioning
 data "archive_file" "function_source" {
   type        = "zip"
   source_dir  = var.function_source_dir
   output_path = "${path.module}/function_source.zip"
 }
 
-# Upload the function source code to the bucket
+# Source Code Upload
+# Uploads the ZIP file to the storage bucket
+# Uses MD5 hash in object name for versioning
 resource "google_storage_bucket_object" "function_source" {
   name   = "function-source-${data.archive_file.function_source.output_md5}.zip"
   bucket = google_storage_bucket.function_bucket.name
   source = data.archive_file.function_source.output_path
 }
 
-# Create the Cloud Function
+# Cloud Function
+# Deploys the actual function with:
+# - Python 3.9 runtime
+# - HTTP trigger
+# - Auto-scaling (0-3 instances)
+# - Service account integration
+# - Environment variables
 resource "google_cloudfunctions_function" "hello_world" {
   project     = var.project_id
   name        = "hello-world-function"
@@ -81,7 +99,8 @@ resource "google_cloudfunctions_function" "hello_world" {
   depends_on = [var.project_apis_enabled]
 }
 
-# Allow the Load Balancer to invoke the function
+# Load Balancer Invoker Permission
+# Allows the Load Balancer service account to invoke the function
 resource "google_cloudfunctions_function_iam_binding" "function_invoker" {
   project        = var.project_id
   cloud_function = google_cloudfunctions_function.hello_world.name
@@ -93,7 +112,9 @@ resource "google_cloudfunctions_function_iam_binding" "function_invoker" {
   ]
 }
 
-# Deny direct access to the function
+# Direct Access Denial
+# Explicitly denies direct access to the function
+# This ensures the function can only be accessed through the Load Balancer
 resource "google_cloudfunctions_function_iam_binding" "function_deny_all" {
   project        = var.project_id
   cloud_function = google_cloudfunctions_function.hello_world.name
@@ -101,7 +122,8 @@ resource "google_cloudfunctions_function_iam_binding" "function_deny_all" {
   members        = []
 }
 
-# Allow access to Serverless NEG
+# Serverless NEG Permission
+# Allows the Serverless Network Endpoint Group to invoke the function
 resource "google_cloudfunctions_function_iam_member" "neg_invoker" {
   project        = var.project_id
   region         = var.region
@@ -110,7 +132,9 @@ resource "google_cloudfunctions_function_iam_member" "neg_invoker" {
   member         = "serviceAccount:${var.project_number}-compute@developer.gserviceaccount.com"
 }
 
-# Allow access to your own service account
+# Self-Invocation Permission
+# Allows the function's own service account to invoke itself
+# Useful for function-to-function communication
 resource "google_cloudfunctions_function_iam_member" "self_invoker" {
   project        = var.project_id
   region         = var.region

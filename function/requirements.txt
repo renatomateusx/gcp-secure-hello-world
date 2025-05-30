@@ -1,1 +1,4 @@
+# Google Cloud Functions Framework
+# Required for local development and testing of Cloud Functions
+# Version 3.3.0 is used for compatibility with Python 3.9 runtime
 functions-framework==3.3.0

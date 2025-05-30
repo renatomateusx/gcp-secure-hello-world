@@ -5,15 +5,21 @@
  * It instantiates all the modules and passes variables between them.
  */
 
-
 # Configure the Google Cloud provider
+# This block sets up the Google Cloud provider with the project ID from the core_infra module
+# and uses the region and zone variables for resource placement
 provider "google" {
   project = module.core_infra.project_id
   region  = var.region
   zone    = var.zone
 }
 
-# Create the core infrastructure (project, APIs, service accounts)
+# Core Infrastructure Module
+# Creates the foundational GCP resources:
+# - GCP Project
+# - Required APIs
+# - Service Accounts
+# - IAM permissions
 module "core_infra" {
   source = "./modules/core_infra"
 
@@ -25,7 +31,12 @@ module "core_infra" {
   zone               = var.zone
 }
 
-# Create the Cloud Function
+# Cloud Function Module
+# Deploys a serverless function with:
+# - Function code and configuration
+# - Service account permissions
+# - API enablement
+# - Environment variables
 module "cloud_function" {
   source = "./modules/cloud_function"
 
@@ -40,7 +51,13 @@ module "cloud_function" {
   depends_on = [module.core_infra]
 }
 
-# Create the Load Balancer
+# Load Balancer Module
+# Sets up a global load balancer with:
+# - Backend service
+# - URL map
+# - Target proxy
+# - Forwarding rules
+# - Health checks
 module "load_balancer" {
   source = "./modules/load_balancer"
 
@@ -52,7 +69,12 @@ module "load_balancer" {
   depends_on = [module.core_infra, module.cloud_function]
 }
 
-# Optional: Create monitoring resources
+# Monitoring Module
+# Creates monitoring resources:
+# - Cloud Monitoring dashboards
+# - Alert policies
+# - Log-based metrics
+# - Uptime checks
 module "monitoring" {
   source = "./modules/monitoring"
   

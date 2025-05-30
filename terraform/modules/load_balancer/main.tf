@@ -4,9 +4,19 @@
  * This module creates a global HTTP(S) Load Balancer with a Serverless NEG
  * that points to the Cloud Function. It includes backend services,
  * URL maps, and forwarding rules.
+ * 
+ * The module sets up:
+ * - Serverless Network Endpoint Group (NEG)
+ * - Security policies
+ * - Backend service
+ * - URL routing
+ * - HTTP proxy
+ * - Global forwarding rules
  */
 
-# Create a Serverless Network Endpoint Group (NEG) for the Cloud Function
+# Serverless NEG
+# Creates a Network Endpoint Group that connects to the Cloud Function
+# This allows the Load Balancer to route traffic to the serverless function
 resource "google_compute_region_network_endpoint_group" "function_neg" {
   project               = var.project_id
   name                  = "hello-world-function-neg"
@@ -18,7 +28,9 @@ resource "google_compute_region_network_endpoint_group" "function_neg" {
   }
 }
 
-# Create a security policy that allows all requests
+# Security Policy
+# Defines rules for traffic filtering and access control
+# Currently allows all traffic but can be customized for production
 resource "google_compute_security_policy" "function_security_policy" {
   project               = var.project_id
   name = "hello-world-security-policy"
@@ -50,7 +62,9 @@ resource "google_compute_security_policy" "function_security_policy" {
   }
 }
 
-# Create a backend service that uses the Serverless NEG
+# Backend Service
+# Configures how traffic is routed to the Cloud Function
+# Includes timeout settings and logging configuration
 resource "google_compute_backend_service" "function_backend" {
   project     = var.project_id
   name        = "hello-world-backend"
@@ -69,7 +83,9 @@ resource "google_compute_backend_service" "function_backend" {
   }
 }
 
-# Create a URL map to route requests to the backend service
+# URL Map
+# Defines routing rules for incoming requests
+# Currently routes all traffic to the backend service
 resource "google_compute_url_map" "function_url_map" {
   project         = var.project_id
   name            = "hello-world-url-map"
@@ -92,7 +108,9 @@ resource "google_compute_url_map" "function_url_map" {
   }
 }
 
-# Create an HTTP proxy that uses the URL map
+# HTTP Proxy
+# Creates a proxy that uses the URL map for routing
+# Acts as an intermediary between clients and the backend
 resource "google_compute_target_http_proxy" "function_http_proxy" {
   project     = var.project_id
   name        = "hello-world-http-proxy"
@@ -100,7 +118,9 @@ resource "google_compute_target_http_proxy" "function_http_proxy" {
   url_map     = google_compute_url_map.function_url_map.id
 }
 
-# Create a global forwarding rule to route traffic to the HTTP proxy
+# Global Forwarding Rule
+# Creates the entry point for incoming traffic
+# Routes traffic to the HTTP proxy on port 80
 resource "google_compute_global_forwarding_rule" "function_forwarding_rule" {
   project     = var.project_id
   name        = "hello-world-forwarding-rule"
@@ -117,8 +137,8 @@ resource "google_compute_global_forwarding_rule" "function_forwarding_rule" {
   }
 }
 
-# Optional: Create HTTPS resources if SSL is required
-# This would include:
-# 1. google_compute_managed_ssl_certificate
-# 2. google_compute_target_https_proxy
-# 3. Another google_compute_global_forwarding_rule for port 443
+# Optional: HTTPS Configuration
+# To enable HTTPS, uncomment and configure:
+# 1. SSL Certificate
+# 2. HTTPS Proxy
+# 3. HTTPS Forwarding Rule (port 443)
